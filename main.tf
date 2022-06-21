@@ -258,7 +258,7 @@ resource "aws_lb" "cloudnativeApp-alb" {
   enable_deletion_protection = false
 
   tags = {
-    Environment = "Development"
+    Environment = "development"
   }
 }
 
