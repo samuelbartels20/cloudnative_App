@@ -11,7 +11,7 @@ terraform {
 
 # Configure terraform provider
 provider "aws" {
-  region = "eu-central-1"
+  region = var.region
 }
 
 # Configure AMI
@@ -31,6 +31,24 @@ data "aws_ami" "ubuntu" {
   # Canonical
   owners = ["099720109477"]
 }
+
+# Configure AWS directory service
+resource "aws_directory_service_directory" "cloudnativeApp_aws_directory_service_directory" {
+  name     = "workspaces.skillembassy.io"
+  password = "#S1ncerely"
+  size     = "Small"
+  vpc_settings {
+    vpc_id     = aws_vpc.cloudnativeApp_vpc.id
+    subnet_ids = [aws_subnet.cloudnativeApp_subnet3.id, aws_subnet.cloudnativeApp_subnet4.id]
+  }
+}
+
+# Configure AWS worskapces directory
+resource "aws_workspaces_directory" "cloudnativeApp_aws_workspaces_directory" {
+  directory_id = aws_directory_service_directory.cloudnativeApp_aws_directory_service_directory.id
+  subnet_ids   = [aws_subnet.cloudnativeApp_subnet3.id, aws_subnet.cloudnativeApp_subnet4.id]
+}
+
 
 # Configure VPC
 resource "aws_vpc" "cloudnativeApp_vpc" {
@@ -80,6 +98,19 @@ resource "aws_subnet" "cloudnativeApp_subnet3" {
     Name = "cloudnativeApp_subnet3"
     Type = "Private"
     Description = " Subnet3 for cloudnativeApp"
+  }
+}
+
+# Configure subnet4
+resource "aws_subnet" "cloudnativeApp_subnet4" {
+  vpc_id            = aws_vpc.cloudnativeApp_vpc.id
+  cidr_block        = cidrsubnet(var.cidr_block, 8, 4)
+  availability_zone = var.availability_zones[1]
+
+  tags = {
+    Name = "cloudnativeApp_subnet4"
+    Type = "Private"
+    Description = " Subnet4 for cloudnativeApp"
   }
 }
 
@@ -258,7 +289,7 @@ resource "aws_lb" "cloudnativeApp-alb" {
   enable_deletion_protection = false
 
   tags = {
-    Environment = "development"
+    Environment = "evelopment"
   }
 }
 
@@ -300,7 +331,7 @@ resource "aws_alb_listener_rule" "cloudnativeApp_aws_alb_listener_rule1" {
 
 # Configure auto scaling group
 resource "aws_autoscaling_group" "cloudnativeApp_aws_autoscaling_group" {
-  vpc_zone_identifier = [aws_subnet.cloudnativeApp_subnet3.id]
+  vpc_zone_identifier = [aws_subnet.cloudnativeApp_subnet3.id, aws_subnet.cloudnativeApp_subnet4.id]
 
   desired_capacity = 2
   max_size         = 2

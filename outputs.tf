@@ -18,3 +18,4 @@ output "alb_dns_name" {
   description = "alb dns"
   value       = aws_lb.cloudnativeApp-alb.dns_name
 }
+
