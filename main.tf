@@ -119,6 +119,34 @@ resource "aws_iam_role_policy_attachment" "cloudnativeApp_workspaces_default_sel
   policy_arn = "arn:aws:iam::aws:policy/AmazonWorkSpacesSelfServiceAccess"
 }
 
+data "aws_workspaces_bundle" "cloudnativeApp_value_windows_10" {
+  bundle_id = "wsb-bh8rsxt14" # Value with Windows 10 (English)
+}
+
+resource "aws_workspaces_workspace" "cloudnativeApp_aws_workspaces_workspace" {
+  directory_id = aws_workspaces_directory.cloudnativeApp_aws_workspaces_directory.id
+  bundle_id    = data.aws_workspaces_bundle.cloudnativeApp_value_windows_10.id
+  user_name    = "Administrator"
+
+  root_volume_encryption_enabled = true
+  user_volume_encryption_enabled = true
+  volume_encryption_key          = "alias/aws/workspaces"
+
+  workspace_properties {
+    compute_type_name                         = "VALUE"
+    user_volume_size_gib                      = 10
+    root_volume_size_gib                      = 80
+    running_mode                              = "AUTO_STOP"
+    running_mode_auto_stop_timeout_in_minutes = 60
+  }
+
+  tags = {
+    Department = "IT"
+  }
+}
+
+
+
 # Configure VPC
 resource "aws_vpc" "cloudnativeApp_vpc" {
   cidr_block = var.cidr_block
