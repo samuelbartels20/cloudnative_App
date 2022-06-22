@@ -14,6 +14,10 @@ output "subnet3_id" {
   value = aws_subnet.cloudnativeApp_subnet3.id
 }
 
+output "subnet4_id" {
+  value = aws_subnet.cloudnativeApp_subnet4.id
+}
+
 output "alb_dns_name" {
   description = "alb dns"
   value       = aws_lb.cloudnativeApp-alb.dns_name
