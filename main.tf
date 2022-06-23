@@ -47,6 +47,10 @@ resource "aws_directory_service_directory" "cloudnativeApp_aws_directory_service
   }
 }
 
+resource "aws_workspaces_ip_group" "cloudnativeApp_aws_workspaces_ip_group" {
+  name = "cloudnativeApp_aws_workspaces_ip_group"
+}
+
 # Configure AWS worskapces directory
 resource "aws_workspaces_directory" "cloudnativeApp_aws_workspaces_directory" {
   directory_id = aws_directory_service_directory.cloudnativeApp_aws_directory_service_directory.id
@@ -58,6 +62,10 @@ resource "aws_workspaces_directory" "cloudnativeApp_aws_workspaces_directory" {
   tags = {
     Example = true
   }
+
+    ip_group_ids = [
+    aws_workspaces_ip_group.cloudnativeApp_aws_workspaces_ip_group.id,
+  ]
 
   self_service_permissions {
     change_compute_type  = true
@@ -94,6 +102,9 @@ resource "aws_workspaces_directory" "cloudnativeApp_aws_workspaces_directory" {
 
 data "aws_iam_policy_document" "cloudnativeApp_aws_iam_policy_document" {
   statement {
+    effect= "Allow"
+    sid    = "iamPassRole"
+    // resources = "*"
     actions = ["sts:AssumeRole"]
 
     principals {
@@ -101,10 +112,11 @@ data "aws_iam_policy_document" "cloudnativeApp_aws_iam_policy_document" {
       identifiers = ["workspaces.amazonaws.com"]
     }
   }
+
 }
 
 resource "aws_iam_role" "cloudnativeApp_aws_iam_role" {
-  name               = "cloudnativeApp_workspaces_DefaultRole"
+  name               = "workspaces_DefaultRole"
   assume_role_policy = data.aws_iam_policy_document.cloudnativeApp_aws_iam_policy_document.json
 }
 
@@ -120,7 +132,7 @@ resource "aws_iam_role_policy_attachment" "cloudnativeApp_workspaces_default_sel
 }
 
 data "aws_workspaces_bundle" "cloudnativeApp_value_windows_10" {
-  bundle_id = "wsb-bh8rsxt14" # Value with Windows 10 (English)
+  bundle_id = "wsb-bh8rsxt14" 
 }
 
 resource "aws_workspaces_workspace" "cloudnativeApp_aws_workspaces_workspace" {
