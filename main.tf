@@ -145,7 +145,23 @@ resource "aws_workspaces_workspace" "cloudnativeApp_aws_workspaces_workspace" {
   }
 }
 
+resource "aws_vpc_dhcp_options" "cloudnativeApp_dns_resolver" {
+  domain_name_servers = aws_directory_service_directory.cloudnativeApp_aws_directory_service_directory.dns_ip_addresses
+  domain_name = "skillembassy.io"
+  tags = {
+    Name = "cloudnativeApp_dns_resolver"
+    Environment = "development"
+  }
+}
+resource "aws_vpc_dhcp_options_association" "dns_resolver" {
+  vpc_id = aws_vpc.cloudnativeApp_vpc.id
+  dhcp_options_id = aws_vpc_dhcp_options.cloudnativeApp_dns_resolver.id
+}
 
+resource "aws_kms_key" "cloudnativeApp-workspaces-kms" {
+  description = "cloudnativeApp KMS"
+  deletion_window_in_days = 7
+}
 
 # Configure VPC
 resource "aws_vpc" "cloudnativeApp_vpc" {
