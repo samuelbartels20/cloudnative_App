@@ -130,7 +130,8 @@ resource "aws_workspaces_workspace" "cloudnativeApp_aws_workspaces_workspace" {
 
   root_volume_encryption_enabled = true
   user_volume_encryption_enabled = true
-  volume_encryption_key          = "alias/aws/workspaces"
+  // volume_encryption_key          = "alias/aws/workspaces"
+  volume_encryption_key          = aws_kms_key.cloudnativeApp-workspaces-kms.arn
 
   workspace_properties {
     compute_type_name                         = "VALUE"
