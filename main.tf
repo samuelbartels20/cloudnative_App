@@ -63,6 +63,7 @@ resource "aws_workspaces_directory" "cloudnativeApp_aws_workspaces_directory" {
     Example = true
   }
 
+
     ip_group_ids = [
     aws_workspaces_ip_group.cloudnativeApp_aws_workspaces_ip_group.id,
   ]
@@ -92,7 +93,8 @@ resource "aws_workspaces_directory" "cloudnativeApp_aws_workspaces_directory" {
     enable_internet_access              = true
     enable_maintenance_mode             = true
     user_enabled_as_local_administrator = true
-  }
+  } 
+
 
   depends_on = [
     aws_iam_role_policy_attachment.cloudnativeApp_workspaces_default_service_access,
@@ -123,7 +125,7 @@ resource "aws_iam_role" "cloudnativeApp_aws_iam_role" {
 
 resource "aws_iam_role_policy_attachment" "cloudnativeApp_workspaces_default_service_access" {
   role       = aws_iam_role.cloudnativeApp_aws_iam_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonWorkSpacesSelfServiceAccess"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonWorkSpacesServiceAccess"
 }
 
 resource "aws_iam_role_policy_attachment" "cloudnativeApp_workspaces_default_self_service_access" {
@@ -152,6 +154,9 @@ resource "aws_workspaces_workspace" "cloudnativeApp_aws_workspaces_workspace" {
     running_mode                              = "AUTO_STOP"
     running_mode_auto_stop_timeout_in_minutes = 60
   }
+
+
+
 
   tags = {
     Department = "IT"
