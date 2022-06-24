@@ -8,6 +8,6 @@ resource "aws_instance" "cloudnativeApp_mongo" {
   user_data = filebase64("${path.module}/install.sh")
 
   tags = {
-    Name  = "Mongo"
+    Name  = "cloudnativeApp_mongo"
   }
 }
