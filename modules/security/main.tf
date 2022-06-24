@@ -1,3 +1,5 @@
+
+# Configure security group for bastion instance
 resource "aws_security_group" "cloudnativeAp_aws_security_group_bastion" {
   name        = "cloudnativeAp_aws_security_group_bastion"
   description = "bastion network traffic"
@@ -23,7 +25,7 @@ resource "aws_security_group" "cloudnativeAp_aws_security_group_bastion" {
   }
 }
 
-
+# Configure security group for application loadbalancer
 resource "aws_security_group" "cloudnativeApp_aws_security_group_alb" {
   name        = "cloudnativeApp_aws_security_group_alb"
   description = "alb network traffic"
@@ -49,7 +51,7 @@ resource "aws_security_group" "cloudnativeApp_aws_security_group_alb" {
   }
 }
 
-
+# Configure security group for cloudnativeApp application
 resource "aws_security_group" "cloudnativeApp_aws_security_group_application" {
   name        = "cloudnativeApp_aws_security_group_application"
   description = "application network traffic"
@@ -78,7 +80,7 @@ resource "aws_security_group" "cloudnativeApp_aws_security_group_application" {
     from_port       = 22
     to_port         = 22
     protocol        = "tcp"
-    security_groups = [aws_security_group.cloudnativeAp_aws_security_group_bastion.id]
+    security_groups = [aws_security_group.cloudnativeApp_aws_security_group_bastion.id]
   }
 
   egress {
@@ -90,5 +92,40 @@ resource "aws_security_group" "cloudnativeApp_aws_security_group_application" {
 
   tags = {
     Name = "application allow traffic"
+  }
+}
+
+# Configure security group for mongodb database instance
+resource "aws_security_group" "cloudnativeApp_aws_security_group_mongodb" {
+  name        = "cloudnativeApp_aws_security_group_mongodb"
+  description = "mongodb network traffic"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    description = "27017 from application"
+    from_port   = 27017
+    to_port     = 27017
+    protocol    = "tcp"
+    cidr_blocks      = ["10.0.0.0/16"]
+    security_groups = [aws_security_group.cloudnativeApp_aws_security_group_application.id]
+  }
+
+  ingress {
+    description     = "22 from bastion"
+    from_port       = 22
+    to_port         = 22
+    protocol        = "tcp"
+    security_groups = [aws_security_group.cloudnativeAp_aws_security_group_bastion.id]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "database allow traffic"
   }
 }
