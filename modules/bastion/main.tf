@@ -1,5 +1,5 @@
 resource "aws_instance" "cloudnativeApp_aws_instance_bastion" {
-  ami                         = "ami-02868af3c3df4b3aa"
+  ami                         = "ami-0d70546e43a941d70"
   instance_type               = var.instance_type
   key_name                    = var.key_name
   subnet_id                   = var.subnet_id

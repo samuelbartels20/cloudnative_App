@@ -10,7 +10,7 @@ resource "aws_security_group" "cloudnativeAp_aws_security_group_bastion" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = [var.workstation_ip]
+    // cidr_blocks = [var.workstation_ip]
   }
 
   egress {
@@ -63,7 +63,7 @@ resource "aws_security_group" "cloudnativeApp_aws_security_group_application" {
     to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["10.0.1.0/24", "10.0.2.0/24"]
-    security_groups  = [aws_security_group.cloudnativeApp_aws_security_group_alb.id]
+    // security_groups  = [aws_security_group.cloudnativeApp_aws_security_group_alb.id]
   }
 
   ingress {
@@ -72,7 +72,7 @@ resource "aws_security_group" "cloudnativeApp_aws_security_group_application" {
     to_port     = 8080
     protocol    = "tcp"
     cidr_blocks = ["10.0.1.0/24", "10.0.2.0/24"]
-    security_groups  = [aws_security_group.cloudnativeApp_aws_security_group_alb.id]
+    // security_groups  = [aws_security_group.cloudnativeApp_aws_security_group_alb.id]
   }
 
   ingress {
@@ -80,7 +80,7 @@ resource "aws_security_group" "cloudnativeApp_aws_security_group_application" {
     from_port       = 22
     to_port         = 22
     protocol        = "tcp"
-    security_groups = [aws_security_group.cloudnativeApp_aws_security_group_bastion.id]
+    security_groups = [aws_security_group.cloudnativeAp_aws_security_group_bastion.id]
   }
 
   egress {
@@ -106,7 +106,7 @@ resource "aws_security_group" "cloudnativeApp_aws_security_group_mongodb" {
     from_port   = 27017
     to_port     = 27017
     protocol    = "tcp"
-    cidr_blocks      = ["10.0.0.0/16"]
+    // cidr_blocks      = ["10.0.0.0/16"]
     security_groups = [aws_security_group.cloudnativeApp_aws_security_group_application.id]
   }
 

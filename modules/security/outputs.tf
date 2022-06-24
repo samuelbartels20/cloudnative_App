@@ -10,7 +10,7 @@ output "alb_sg_id" {
 
 output "mongodb_sg_id" {
   description = "mongodb sg id"
-  value       = aws_security_group.mongodb.id
+  value       = aws_security_group.cloudnativeApp_aws_security_group_mongodb.id
 }
 
 output "bastion_sg_id" {

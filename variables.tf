@@ -1,27 +1,29 @@
-variable "region" {
-  type = string
-}
-
-variable "instance_type" {
-  type = string
-}
 variable "key_name" {
   type = string
 }
 
-variable "availability_zones" {
-  type = list(string)
-}
-
-variable "amis" {
-  type = map(any)
-  default = {
-    "us-east-2" : "ami-02f3416038bdb17fb"
-    "eu-central-1" : "ami-065deacbcaac64cf2"
-  }
+variable "environment" {
+  type    = string
+  default = "development"
 }
 
 variable "cidr_block" {
   type        = string
-  description = "VPC cidr block. Example: 10.10.0.0/16"
+  description = "VPC cidr block."
+}
+
+variable "availability_zones" {
+  type = list(any)
+}
+
+variable "bastion_instance_type" {
+  type = string
+}
+
+variable "app_instance_type" {
+  type = string
+}
+
+variable "db_instance_type" {
+  type = string
 }

@@ -1,25 +1,19 @@
-output "vpc_id" {
-  value = aws_vpc.cloudnativeApp_vpc.id
-}
-
-output "subnet1_id" {
-  value = aws_subnet.cloudnativeApp_subnet1.id
-}
-
-output "subnet2_id" {
-  value = aws_subnet.cloudnativeApp_subnet2.id
-}
-
-output "subnet3_id" {
-  value = aws_subnet.cloudnativeApp_subnet3.id
-}
-
-output "subnet4_id" {
-  value = aws_subnet.cloudnativeApp_subnet4.id
-}
-
-output "alb_dns_name" {
+output "alb_dns" {
   description = "alb dns"
-  value       = aws_lb.cloudnativeApp-alb.dns_name
+  value       = module.application.dns_name
 }
 
+output "bastion_public_ip" {
+  description = "bastion public ip"
+  value       = module.bastion.public_ip
+}
+
+// output "application_private_ips" {
+//   description = "application instance private ips"
+//   value       = module.application.private_ips
+// }
+
+output "mongodb_private_ip" {
+  description = "mongodb private ip"
+  value       = module.storage.private_ip
+}
